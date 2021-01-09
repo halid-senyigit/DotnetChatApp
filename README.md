@@ -12,3 +12,7 @@ https://docs.microsoft.com/tr-tr/aspnet/core/tutorials/signalr?view=aspnetcore-3
 dotnet restore
 dotnet run
 ```
+
+
+Client App:
+https://github.com/halid-senyigit/ChatAppClient

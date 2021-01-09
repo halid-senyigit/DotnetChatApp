@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DotnetChatApp.Database;
@@ -8,11 +10,15 @@ namespace AspNetCoreAngularSignalR.Hubs
     public class ChatHub : Hub
     {
         private readonly ModelContext db;
+        private HashSet<string> connections;
 
         public ChatHub(ModelContext db)
         {
             this.db = db;
+            connections = new HashSet<string>();
         }
+
+
         public async Task SendMessage(string user, string message)
         {
             User u = db.Users.FirstOrDefault(n => n.Username == user);
@@ -22,10 +28,12 @@ namespace AspNetCoreAngularSignalR.Hubs
                 {
                     Username = user
                 };
+                u.CurrentClientID = Context.UserIdentifier;
+                Console.WriteLine(u.CurrentClientID);
                 db.Users.Add(u);
                 db.SaveChanges();
             }
-
+            
             db.Messages.Add(new Message
             {
                 UserID = u.UserID,
@@ -35,5 +43,6 @@ namespace AspNetCoreAngularSignalR.Hubs
             db.SaveChanges();
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
+
     }
 }

@@ -9,6 +9,8 @@ namespace DotnetChatApp.Database
 
         public string Username { get; set; }
 
+        public string CurrentClientID { get; set; }
+
         public virtual ICollection<Message> Messages { get; set; }
     }
     

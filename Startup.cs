@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DotnetChatApp.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace DotnetChatApp
 {
@@ -27,7 +28,7 @@ namespace DotnetChatApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddControllers();
             services.Configure<IConfiguration>(Configuration);
 
             services.AddDbContext<ModelContext>(opt =>
@@ -63,12 +64,14 @@ namespace DotnetChatApp
 
             app.UseAuthorization();
 
+            app.Map("", x => x.Run(async context =>
+            {
+                await context.Response.WriteAsync("server is running");
+            }));
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-
+                endpoints.MapControllers();
                 endpoints.MapHub<ChatHub>("/chathub");
             });
         }

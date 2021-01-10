@@ -11,6 +11,8 @@ namespace DotnetChatApp.Database
 
         public string CurrentClientID { get; set; }
 
+        public bool IsConnected { get; set; }
+
         public virtual ICollection<Message> Messages { get; set; }
     }
     
